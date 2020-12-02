@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   entry: './src/index.js',
@@ -13,25 +14,27 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue']
   },
-  module: {
-    loaders: [{
-      test: /\.js$/,
-      loader: 'babel-loader',
-      include: __dirname,
-      exclude: /node_modules/
-    }, {
-      test: /\.vue$/,
-      loader: 'vue-loader'
-    }]
-  },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
-      sourceMap: false,
-      mangle: true,
-      compress: {
-          warnings: false
+    new VueLoaderPlugin()
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        }
+      },
+      {
+        test: /\.vue$/,
+        use: {
+          loader: 'vue-loader'
+        }
       }
-    })
-  ]
+    ]
+  },
+  optimization: {
+    minimize: true
+  }
 };
